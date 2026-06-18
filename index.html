@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binary Search Visualizer</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+    padding:20px;
+}
+
+.container{
+    width:450px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.25);
+    animation:fadeIn 0.8s ease;
+}
+
+h1{
+    text-align:center;
+    color:white;
+    margin-bottom:10px;
+    font-size:28px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#dbeafe;
+    margin-bottom:25px;
+    font-size:14px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:6px;
+    color:white;
+    font-weight:600;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:none;
+    outline:none;
+    border-radius:10px;
+    font-size:15px;
+}
+
+input:focus{
+    box-shadow:0 0 8px rgba(255,255,255,0.5);
+}
+
+.hint{
+    color:#cbd5e1;
+    font-size:12px;
+    margin-top:5px;
+}
+
+button{
+    width:100%;
+    margin-top:25px;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:white;
+    color:#1e40af;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+    background:#e0e7ff;
+}
+
+#result{
+    margin-top:20px;
+    padding:15px;
+    border-radius:10px;
+    text-align:center;
+    font-weight:bold;
+    color:white;
+}
+
+.success{
+    background:rgba(34,197,94,0.25);
+    border:1px solid rgba(34,197,94,0.5);
+}
+
+.error{
+    background:rgba(239,68,68,0.25);
+    border:1px solid rgba(239,68,68,0.5);
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Binary Search</h1>
+    <p class="subtitle">Fast Search Using Sorted Array</p>
+
+    <form id="binaryForm">
+
+        <label>Array Size</label>
+        <input type="number" id="size" required>
+
+        <label>Array Elements</label>
+        <input type="text"
+               id="array"
+               placeholder="Example: 10 20 30 40 50"
+               required>
+
+        <div class="hint">
+            Enter numbers separated by spaces.
+        </div>
+
+        <label>Element to Search</label>
+        <input type="number" id="key" required>
+
+        <button type="submit">
+            Search Element
+        </button>
+
+    </form>
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+
+document.getElementById("binaryForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    let size = parseInt(document.getElementById("size").value);
+
+    let arr = document.getElementById("array")
+                .value
+                .trim()
+                .split(/\s+/)
+                .map(Number)
+                .sort((a,b)=>a-b);
+
+    let key = parseInt(document.getElementById("key").value);
+
+    const result = document.getElementById("result");
+
+    if(arr.length !== size){
+        result.className = "error";
+        result.innerHTML = "⚠ Array size and entered elements do not match.";
+        return;
+    }
+
+    let low = 0;
+    let high = arr.length - 1;
+    let found = false;
+    let index = -1;
+
+    while(low <= high){
+
+        let mid = Math.floor((low + high) / 2);
+
+        if(arr[mid] === key){
+            found = true;
+            index = mid;
+            break;
+        }
+        else if(key < arr[mid]){
+            high = mid - 1;
+        }
+        else{
+            low = mid + 1;
+        }
+    }
+
+    if(found){
+        result.className = "success";
+        result.innerHTML =
+        `✅ Element <b>${key}</b> found at index <b>${index}</b>`;
+    }
+    else{
+        result.className = "error";
+        result.innerHTML =
+        `❌ Element <b>${key}</b> not found in the array`;
+    }
+
+});
+
+</script>
+
+</body>
+</html>
